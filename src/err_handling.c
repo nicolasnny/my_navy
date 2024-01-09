@@ -10,13 +10,6 @@
 #include <unistd.h>
 #include "navy_func.h"
 
-static int abs_value(int nb)
-{
-    if (nb < 0)
-        nb *= -1;
-    return nb;
-}
-
 int get_size(char const *filePath)
 {
     int fd = open(filePath, O_RDONLY);
@@ -40,8 +33,8 @@ static int get_size_w_coord(char *coord1, char *coord2)
     if (coord1[0] != coord2[0] && coord1[1] != coord2[1])
         return ERROR;
     if (coord1[0] == coord2[0])
-        return abs_value(coord2[1] - coord1[1]) + 1;
-    return abs_value(coord2[0] - coord1[0]) + 1;
+        return coord2[1] - coord1[1] + 1;
+    return coord2[0] - coord1[0] + 1;
 }
 
 static int analyse_coord(char *coord)
@@ -99,7 +92,7 @@ static int check_line(char *line)
 static int check_num(char *str)
 {
     for (int i = 0; str[i]; i++) {
-        if (!(str[i] >= '1' && str[i] <= '9'))
+        if (!(str[i] >= '0' && str[i] <= '9'))
             return ERROR;
     }
     return 0;

@@ -9,6 +9,27 @@
 #include <unistd.h>
 #include "navy_func.h"
 
+static int is_num(char c)
+{
+    return (c >= '0' && c <= '9');
+}
+
+static char **create_map(void)
+{
+    char **map = malloc(sizeof(char *) * (MAP_SIZE + 1));
+    int line = 0;
+
+    while (line < MAP_SIZE) {
+        map[line] = malloc(sizeof(char) * (MAP_SIZE + 1));
+        for (int i = 0; i < MAP_SIZE; i++)
+            map[line][i] = '.';
+        map[line][MAP_SIZE] = '\0';
+        line++;
+    }
+    map[line] = NULL;
+    return map;
+}
+
 static char *get_file_content(char *filepath)
 {
     int fd = fs_open_file(filepath);
@@ -34,6 +55,7 @@ static char **get_coords(char *filepath)
         res[coord_nb] = get_coord(line + 2);
         coord_nb++;
         res[coord_nb] = get_coord(line + 5);
+        coord_nb++;
         line_nb++;
     }
     res[coord_nb] = NULL;
@@ -41,9 +63,60 @@ static char **get_coords(char *filepath)
     return res;
 }
 
+static int put_ship_line(char **map, int num, char *coord1, char *coord2)
+{
+    int line = coord1[0] - 'A';
+    int col1 = coord1[1] - '0';
+    int col2 = coord2[1] - '0';
+
+    while (col1 < col2) {
+        if (is_num(map[line][col1]))
+            return ERROR;
+        map[line][col1] = num;
+        col1++;
+    }
+    return 0;
+}
+
+static int put_ship_col(char **map, int num, char *coord1, char *coord2)
+{
+    int line1 = coord1[0] - 'A';
+    int line2 = coord2[0] - 'A';
+    int col = coord1[1] - '0';
+
+    while (line1 < line2) {
+        if (is_num(map[line1][col]))
+            return ERROR;
+        map[line1][col] = num;
+        line1++;
+    }
+    return 0;
+}
+
+//static int put_ship(char **map, )
+static int put_ships(char **map, int num, char *coord1, char *coord2)
+{
+    if (coord1[0] == coord2[0])
+        return put_ship_line(map, num, coord1, coord2);
+    return put_ship_col(map, num, coord1, coord2);
+}
+
 char **get_map(char *filepath)
 {
+    char **map = create_map();
     char **coords = get_coords(filepath);
+    int coord_nb = 0;
+    int ret = 0;
 
-    return NULL;
+    for (int i = 0; i < SHIP_NB && ret == 0; i++) {
+        ret = put_ships(map, i + 1, coords[coord_nb], coords[coord_nb + 1]);
+        coord_nb += 2;
+    }
+    clean_2d_array(coords);
+    if (ret == ERROR) {
+        my_putstr_err("Error: couldn't place the ships correctly\n");
+        clean_2d_array(map);
+        return NULL;
+    }
+    return map;
 }

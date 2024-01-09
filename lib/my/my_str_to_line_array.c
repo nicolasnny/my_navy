@@ -23,15 +23,18 @@ static int get_nb_of_line(char *array)
 
 static char *add_line(char *array, int i, int debut)
 {
-    char *newline = malloc(sizeof(char) * ((i - debut) + 1));
+    char *newline;
     int nb_cpy = 0;
 
+    if (array[i] != '\n')
+        i++;
+    newline = malloc(sizeof(char) * ((i - debut) + 2));
     while (debut <= i) {
         newline[nb_cpy] = array[debut];
         nb_cpy++;
         debut++;
     }
-    newline[i + 1] = '\0';
+    newline[nb_cpy] = '\0';
     return newline;
 }
 

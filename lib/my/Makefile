@@ -50,6 +50,8 @@ OBJ	=	$(SRC:.c=.o)
 
 NAME	=	libmy.a
 
+CPPFLAGS	=
+
 CFLAGS	=	-Wall -Wextra
 
 HFILE	=	my.h
@@ -65,3 +67,13 @@ copy:
 
 clean:
 	rm -f $(OBJ) *~
+
+fclean:	clean
+	rm -f $(NAME)
+
+debug:	CPPFLAGS += -g3
+debug:	re
+
+re:	fclean all
+
+.PHONY: all copy clean fclean debug re
