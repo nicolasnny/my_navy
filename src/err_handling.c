@@ -17,7 +17,7 @@ static int abs_value(int nb)
     return nb;
 }
 
-static int get_size(char const *filePath)
+int get_size(char const *filePath)
 {
     int fd = open(filePath, O_RDONLY);
     int size = 0;

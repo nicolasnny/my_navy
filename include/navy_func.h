@@ -12,12 +12,18 @@
 
 //---> constant values
     #define ERROR 84
+    #define SHIP_NB 4
 
 //--> main
 int my_navy(int, char **);
 
+//--> init
+char **get_map(char *filepath);
+char *get_coord(char *line);
+
 //--> error handling
 int err_handling(int ac, char **av);
+int get_size(char const *filepath);
 
 //--> cleaning func
 void clean_2d_array(char **array);
