@@ -10,6 +10,13 @@
 #include <unistd.h>
 #include "navy_func.h"
 
+static int abs_value(int nb)
+{
+    if (nb < 0)
+        nb *= -1;
+    return nb;
+}
+
 static int get_size(char const *filePath)
 {
     int fd = open(filePath, O_RDONLY);
@@ -28,6 +35,67 @@ static int get_size(char const *filePath)
     return size;
 }
 
+static int get_size_w_coord(char *coord1, char *coord2)
+{
+    if (coord1[0] != coord2[0] && coord1[1] != coord2[1])
+        return ERROR;
+    if (coord1[0] == coord2[0])
+        return abs_value(coord2[1] - coord1[1]) + 1;
+    return abs_value(coord2[0] - coord1[0]) + 1;
+}
+
+static int analyse_coord(char *coord)
+{
+    int i = 0;
+
+    while (coord[i]) {
+        if (!(coord[i] >= '1' && coord[i] <= '8') &&
+            !(coord[i] >= 'A' && coord[i] <= 'H'))
+            return ERROR;
+        i++;
+    }
+    if (i > 2)
+        return ERROR;
+    return 0;
+}
+
+char *get_coord(char *line)
+{
+    int i = 0;
+    char *coord;
+
+    while (line[i] && line[i] != '\n' && line[i] != ':')
+        i++;
+    if (i == 0)
+        return NULL;
+    coord = malloc(sizeof(char) * (i + 1));
+    my_strncpy(coord, line, i);
+    return coord;
+}
+
+static int check_line(char *line)
+{
+    int check = 0;
+    int db_point_nb = 0;
+    int i = 0;
+
+    while (line[i] && line[i] != '\n') {
+        if (line[i] == ':') {
+            check = analyse_coord(get_coord(line + i + 1));
+            db_point_nb++;
+        }
+        if (check == ERROR)
+            return ERROR;
+        i++;
+    }
+    if (db_point_nb != 2)
+        return ERROR;
+    if (my_getnbr(line) != get_size_w_coord
+        (get_coord(line + 2), get_coord(line + 5)))
+        return ERROR;
+    return 0;
+}
+
 static int check_num(char *str)
 {
     for (int i = 0; str[i]; i++) {
@@ -39,7 +107,23 @@ static int check_num(char *str)
 
 static int check_buffer(char *buffer)
 {
-    (void)buffer;
+    char **lines = my_str_to_line_array(buffer);
+    int nb_lines = my_strstrlen(lines);
+
+    if (nb_lines != 4) {
+        my_putstr_err("Error: expected 4 ships in the configuration file\n");
+        return ERROR;
+    }
+    for (int i = 0; i < 4; i++) {
+        if (my_getnbr(lines[i]) != i + 2)
+            return ERROR;
+        if (check_line(lines[i]) == ERROR) {
+            my_putstr_err("Error: in line ");
+            my_put_nbr(i + 1);
+            my_putstr_err(" of the config file\n");
+            return ERROR;
+        }
+    }
     return 0;
 }
 

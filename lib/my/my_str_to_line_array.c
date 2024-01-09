@@ -14,7 +14,7 @@ static int get_nb_of_line(char *array)
     int i = 0;
 
     while (array[i]) {
-        if (array[i] == '\n')
+        if (array[i] == '\n' || array[i + 1] == '\0')
             nb++;
         i++;
     }
@@ -44,7 +44,7 @@ char **my_str_to_line_array(char *array)
     int line = 0;
 
     while (i < my_strlen(array)) {
-        if (array[i] == '\n') {
+        if (array[i] == '\n' || array[i + 1] == '\0') {
             rep[line] = malloc(sizeof(char) * (i - debut));
             rep[line] = add_line(array, i, debut);
             debut = i + 1;
@@ -52,6 +52,6 @@ char **my_str_to_line_array(char *array)
         }
         i++;
     }
-    rep[line] = 0;
+    rep[line] = NULL;
     return rep;
 }
