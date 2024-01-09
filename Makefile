@@ -11,6 +11,7 @@ MAIN	=	tests/main.c
 
 SRC     =	src/my_navy.c	\
 		src/err_handling.c	\
+		src/clean.c	\
 
 CRFLAGS	=	--coverage -lcriterion
 

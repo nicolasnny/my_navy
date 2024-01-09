@@ -118,12 +118,14 @@ static int check_buffer(char *buffer)
         if (my_getnbr(lines[i]) != i + 2)
             return ERROR;
         if (check_line(lines[i]) == ERROR) {
+            clean_2d_array(lines);
             my_putstr_err("Error: in line ");
             my_put_nbr(i + 1);
             my_putstr_err(" of the config file\n");
             return ERROR;
         }
     }
+    clean_2d_array(lines);
     return 0;
 }
 

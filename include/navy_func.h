@@ -13,10 +13,13 @@
 //---> constant values
     #define ERROR 84
 
-//-->main
+//--> main
 int my_navy(int, char **);
 
 //--> error handling
 int err_handling(int ac, char **av);
+
+//--> cleaning func
+void clean_2d_array(char **array);
 
 #endif
