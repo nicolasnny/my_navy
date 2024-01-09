@@ -10,13 +10,10 @@
     #include "my.h"
     #include "navy_struct.h"
 
-//-->global variables
-char *host_move;
-char *guest_move;
-
 //---> constant values
     #define ERROR 84
     #define SHIP_NB 4
+    #define MAP_SIZE 8
 
 //--> main
 int my_navy(int, char **);

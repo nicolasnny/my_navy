@@ -12,6 +12,9 @@
 #include <stdbool.h>
 #include "../include/navy_func.h"
 
+char *host_move;
+char *guest_move;
+
 void host_action(int value)
 {
     (void)value;
@@ -42,6 +45,7 @@ int my_navy(int ac, char **av)
     struct sigaction host_act;
     struct sigaction guest_act;
 
+    (void)map;
     host_act.sa_handler = &host_action;
     guest_act.sa_handler = &guest_action;
     sigaction(SIGUSR1, &host_act, NULL);

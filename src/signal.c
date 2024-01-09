@@ -8,7 +8,6 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/navy_func.h"
 
 char *get_new_move(int signal, int pid_to_send)
 {
@@ -18,5 +17,4 @@ char *get_new_move(int signal, int pid_to_send)
     if (signal == SIGUSR2) {
         kill(pid_to_send, SIGUSR2);
     }
-    
 }
