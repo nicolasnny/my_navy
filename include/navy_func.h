@@ -10,6 +10,10 @@
     #include "my.h"
     #include "navy_struct.h"
 
+//-->global variables
+char *host_move;
+char *guest_move;
+
 //---> constant values
     #define ERROR 84
     #define SHIP_NB 4
@@ -27,5 +31,8 @@ int get_size(char const *filepath);
 
 //--> cleaning func
 void clean_2d_array(char **array);
+
+//-->signal handling
+char *get_new_move(int signal, int pid_to_send);
 
 #endif
