@@ -16,4 +16,7 @@
 //-->main
 int my_navy(int, char **);
 
+//--> error handling
+int err_handling(int ac, char **av);
+
 #endif
