@@ -38,4 +38,8 @@ char *get_new_move(int signal, int pid_to_send);
 //--> display
 int display_map(char **map);
 int display_flag_h(void);
+
+//--> game
+int check_hit(char **map, char *coords);
+
 #endif
