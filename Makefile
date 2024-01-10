@@ -16,6 +16,7 @@ SRC     =	src/my_navy.c	\
 		src/init.c	\
 		src/display.c	\
 		src/shoot.c	\
+		src/end.c	\
 
 CRFLAGS	=	--coverage -lcriterion
 

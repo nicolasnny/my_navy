@@ -41,5 +41,6 @@ int display_flag_h(void);
 
 //--> game
 int check_hit(char **map, char *coords);
+int lose(char **map);
 
 #endif
