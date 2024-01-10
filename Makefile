@@ -9,11 +9,12 @@ CC = gcc
 
 MAIN	=	tests/main.c
 
-SRC     =	src/my_navy.c		\
-			src/err_handling.c	\
-			src/signal.c		\
-			src/clean.c			\
-			src/init.c
+SRC     =	src/my_navy.c	\
+		src/err_handling.c	\
+		src/signal.c	\
+		src/clean.c	\
+		src/init.c	\
+		src/display.c	\
 
 CRFLAGS	=	--coverage -lcriterion
 

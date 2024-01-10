@@ -32,4 +32,6 @@ void clean_2d_array(char **array);
 //-->signal handling
 char *get_new_move(int signal, int pid_to_send);
 
+//--> display
+int display_map(char **map);
 #endif
