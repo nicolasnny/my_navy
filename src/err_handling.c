@@ -151,6 +151,8 @@ int err_handling(int ac, char **av)
         my_putstr_err("Error: expected 2 or 3 arguments\n");
         return ERROR;
     }
+    if (ac == 2 && my_strcmp(av[1], "-h") == 0)
+        return display_flag_h();
     if (ac == 2)
         return check_file(av[1]);
     if (check_num(av[1]) == ERROR) {

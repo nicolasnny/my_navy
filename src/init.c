@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include "navy_func.h"
 
-static int is_num(char c)
+int is_num(char c)
 {
     return (c >= '0' && c <= '9');
 }
