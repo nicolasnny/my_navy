@@ -110,7 +110,6 @@ char **get_map(char *filepath)
     int coord_nb = 0;
     int ret = 0;
 
-    display_map(map);
     for (int i = 0; i < SHIP_NB && ret == 0; i++) {
         ret = put_ships(map, i + 2, coords[coord_nb], coords[coord_nb + 1]);
         coord_nb += 2;
