@@ -43,4 +43,7 @@ int display_flag_h(void);
 int check_hit(char **map, char *coords);
 int lose(char **map);
 
+//--> convert
+char *int_to_bin(int nb);
+
 #endif
