@@ -34,5 +34,6 @@ char *int_to_bin(int nb)
     for (int index = 0; index < 32  && str[index] != '1'; index++)
         str[index] = '0';
     str[32] = '\0';
+    printf("converted bin = %s\n", str);
     return str;
 }

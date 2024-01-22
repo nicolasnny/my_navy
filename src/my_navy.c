@@ -11,68 +11,55 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "../include/navy_func.h"
+#include "../include/signal_codes.h"
+#include "../lib/my/my.h"
 
-char *host_move;
-char *guest_move;
+sig_val sig;
 
-void host_action(int value)
+void add_one(int value)
 {
-    (void)value;
-    printf("is host_action\n");
-    host_move = malloc(sizeof(char) * 2);
-    printf("attack : ");
-    scanf("%s", host_move);
-    printf("you've attacked on : %s\n", host_move);
+    sig.value = sig.value << 1;
+	sig.value |= sig.value | 1;
+    sig.index++;
+    usleep(100);
 }
 
-void guest_action(int value)
+void add_zero(int value)
 {
-    (void)value;
-    printf("in guest action\n");
-    guest_move = malloc(sizeof(char) * 2);
-    printf("attack: ");
-    scanf("%s", guest_move);
-    printf("you've attacked on : %s\n", guest_move);
+    sig.value = sig.value << 1;
+    sig.index++;
+    usleep(100);
 }
 
 int my_navy(int ac, char **av)
 {
     int check = err_handling(ac, av);
-    //int pid = getpid();
     char **map;
-    /*int host_pid;
+    int guest_pid;
+    int host_pid;
     bool connected = false;
-    struct sigaction host_act;
-    struct sigaction guest_act;
+    signal(SIGUSR1, add_one);
+    signal(SIGUSR2, add_zero);
 
-    host_act.sa_handler = &host_action;
-    guest_act.sa_handler = &guest_action;
-    sigaction(SIGUSR1, &host_act, NULL);
-    sigaction(SIGUSR2, &guest_act, NULL);*/
     if (check == ERROR)
         return ERROR;
-    if (check)
-        return 0;
-    /*if (ac == 3)
+    if (ac == 3) {
         host_pid = my_getnbr(av[1]);
-    if (ac == 2)
+        printf("guest pid : %d\n", getpid());
+        send_message(host_pid, int_to_bin(getpid()));
+        while (sig.index != 32);
+    }
+    if (ac == 2) {
         host_pid = getpid();
-    printf("pid : %d\n", getpid());
-    while(1) {
-        if (connected)
-            host_move = get_new_move(SIGUSR1, host_pid);
-        if (pid != host_pid) {
-            guest_move = get_new_move(SIGUSR2, pid);
-            connected = true;
-        }
-        }*/
-    (void)map;
+        printf("waiting for connection...\n");
+        printf("host pid = %d\n", host_pid);
+        wait_for_signal(host_pid);
+    }
+    guest_pid = sig.value;
+    printf("value = %d\n", sig.value);
+    printf("index = %d\n", sig.index);
+
+    while(1);
     map = get_map(av[ac - 1]);
-    if (map == NULL)
-        return ERROR;
-    display_map(map);
-    check_hit(map, "H8");
-    display_map(map);
-    printf("checking loose: %d\n", lose(map));
     return 0;
 }

@@ -33,7 +33,8 @@ int get_size(char const *filepath);
 void clean_2d_array(char **array);
 
 //-->signal handling
-char *get_new_move(int signal, int pid_to_send);
+void send_message(int pid, char *message);
+void wait_for_signal(int pid);
 
 //--> display
 int display_map(char **map);
