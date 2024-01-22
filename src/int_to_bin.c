@@ -6,22 +6,29 @@
 */
 
 #include <stdlib.h>
+#include "../include/my.h"
 
-static void get_bin_str(char *str, int nb, int i)
+static int get_bin_str(char *str, int nb)
 {
-    if (nb / 2 > 0)
-        get_bin_str(str, nb / 2, i - 1);
-    str[i] = '0' + nb % 2;
+    int i;
+
+    for (i = 0; nb > 0; i++) {
+        str[i] = '0' + nb % 2;
+        nb = nb / 2;
+    }
+    return i;
 }
 
 char *int_to_bin(int nb)
 {
     char *str = malloc(sizeof(char) * (32 + 1));
-    int i = 32;
+    int index = get_bin_str(str, nb);
 
-    get_bin_str(str, nb, i);
-    for (int index = 0; index < 32 && str[index] != '1'; index++)
+    while (index < 32) {
         str[index] = '0';
+        index++;
+    }
     str[32] = '\0';
+    str = my_revstr(str);
     return str;
 }

@@ -6,7 +6,7 @@
 */
 
 #include "my.h"
-/*
+
 static void my_swapamoi(char *a, char *b)
 {
     char stock = *b;
@@ -14,16 +14,15 @@ static void my_swapamoi(char *a, char *b)
     *b = *a;
     *a = stock;
 }
-*/
-/*
-static char *my_revstr(char *str)
+
+char *my_revstr(char *str)
 {
     int i = my_strlen(str);
     int b = i - 1;
     int a = 0;
 
     if ((i % 2) == 0) {
-        while ( a != (b + 1)) {
+        while (a != (b + 1)) {
             my_swapamoi(&(str[a]), &(str[b]));
             a++;
             b--;
@@ -36,11 +35,4 @@ static char *my_revstr(char *str)
         }
     }
     return str;
-}
-*/
-
-char *my_revstr(char *str)
-{
-    (void)str;
-    return 0;
 }

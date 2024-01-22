@@ -14,7 +14,7 @@ int is_num(char c)
     return (c >= '0' && c <= '9');
 }
 
-static char **create_map(void)
+char **create_map(void)
 {
     char **map = malloc(sizeof(char *) * (MAP_SIZE + 1));
     int line = 0;

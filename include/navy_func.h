@@ -18,12 +18,18 @@
     #define MISS 0
 
 //--> main
-int my_navy(int, char **);
+int guest_connect(char *pid, char *pos);
+int host_connect(char *pos);
+
+//--> users
+int guest_connect(char *pid, char *pos);
+int host_connect(char *pos);
 
 //--> init
 char **get_map(char *filepath);
 char *get_coord(char *line);
 int is_num(char c);
+char **create_map(void);
 
 //--> error handling
 int err_handling(int ac, char **av);
@@ -34,7 +40,8 @@ void clean_2d_array(char **array);
 
 //-->signal handling
 void send_message(int pid, char *message);
-void wait_for_signal(int pid);
+void add_zero(int value);
+void add_one(int value);
 
 //--> display
 int display_map(char **map);
@@ -43,6 +50,8 @@ int display_flag_h(void);
 //--> game
 int check_hit(char **map, char *coords);
 int lose(char **map);
+void launch_host_game(char **map, int host_pid, int guest_pid);
+void launch_guest_game(char **map, int host_pid, int guest_pid);
 
 //--> convert
 char *int_to_bin(int nb);

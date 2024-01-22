@@ -17,6 +17,7 @@ SRC     =	src/int_to_bin.c		\
 			src/init.c			\
 			src/display.c		\
 			src/shoot.c			\
+			src/game.c			\
 			src/end.c			\
 
 CRFLAGS	=	--coverage -lcriterion

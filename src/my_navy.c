@@ -14,52 +14,52 @@
 #include "../include/signal_codes.h"
 #include "../lib/my/my.h"
 
-sig_val sig;
+int sig;
 
-void add_one(int value)
+static void guest_pid(int value, siginfo_t *info, void *context)
 {
-    sig.value = sig.value << 1;
-	sig.value |= sig.value | 1;
-    sig.index++;
-    usleep(100);
+    sig = info->si_pid;
 }
 
-void add_zero(int value)
+static int get_guest_pid(void)
 {
-    sig.value = sig.value << 1;
-    sig.index++;
-    usleep(100);
+    int r;
+    struct sigaction s;
+
+    s.sa_sigaction = &guest_pid;
+    s.sa_flags = SA_SIGINFO;
+    sigaction(SIGUSR1, &s, NULL);
+    while (!sig);
+    return sig;
 }
 
-int my_navy(int ac, char **av)
+int host_connect(char *pos)
 {
-    int check = err_handling(ac, av);
     char **map;
     int guest_pid;
-    int host_pid;
-    bool connected = false;
-    signal(SIGUSR1, add_one);
-    signal(SIGUSR2, add_zero);
+    int host_pid = getpid();
 
-    if (check == ERROR)
-        return ERROR;
-    if (ac == 3) {
-        host_pid = my_getnbr(av[1]);
-        printf("guest pid : %d\n", getpid());
-        send_message(host_pid, int_to_bin(getpid()));
-        while (sig.index != 32);
-    }
-    if (ac == 2) {
-        host_pid = getpid();
-        printf("waiting for connection...\n");
-        printf("host pid = %d\n", host_pid);
-        wait_for_signal(host_pid);
-    }
-    guest_pid = sig.value;
-    printf("value = %d\n", sig.value);
-    printf("index = %d\n", sig.index);
+    printf("my_pid: %d\n", host_pid);
+    printf("waiting for connection...\n");
+    guest_pid = get_guest_pid();
+    printf("connected\n");
+    guest_pid = sig;
+    map = get_map(pos);
+    printf("before launching game\n");
+    launch_host_game(map, host_pid, guest_pid);
+}
 
-    while(1);
-    map = get_map(av[ac - 1]);
+int guest_connect(char *pid, char *pos)
+{
+    char **map;
+    int guest_pid = getpid();
+    int host_pid = my_getnbr(pid);
+
+    printf("my_pid: %d\n", getpid());
+    kill(host_pid, SIGUSR1);
+    send_message(host_pid, int_to_bin(getpid()));
+    map = get_map(pos);
+    printf("before launching game\n");
+    launch_guest_game(map, host_pid, guest_pid);
     return 0;
 }

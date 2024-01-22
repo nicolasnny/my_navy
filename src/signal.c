@@ -11,33 +11,25 @@
 #include <limits.h>
 #include "../include/signal_codes.h"
 
-void show_bytes(unsigned value) { 
-  for (unsigned i = 0; i < sizeof(int); i++) { 
-    const unsigned char byte = value % UCHAR_MAX; 
-    value /= UCHAR_MAX; 
-    printf("%u ", byte); 
-  } 
+void add_one(int value)
+{
+    sig = sig << 1;
+    sig |= sig | 1;
 }
 
-void wait_for_signal(int pid)
+void add_zero(int value)
 {
-    while (!sig.value);
+    sig = sig << 1;
 }
 
 void send_message(int pid, char *message)
-{   
-    sig.value = 0;
-    printf("message : %s", message);
-    printf("\n");
+{
+    sig = 0;
     for (int i = 0; i != 32; i++) {
-        if (message[i] == '1') {
-            printf("sending SIGUSR1\n");
+        if (message[i] == '1')
             kill(pid, SIGUSR1);
-        }
-        if (message[i] == '0') {
-            printf("sending SIGUSR2\n");
+        if (message[i] == '0')
             kill(pid, SIGUSR2);
-        }
         usleep(10);
     }
 }
