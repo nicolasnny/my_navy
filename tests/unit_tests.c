@@ -26,9 +26,10 @@ Test(err_handling, error_pop)
 
     cr_assert_eq(err_handling(2, args), ERROR);
 }
-/*Test(create_map_from_file, empty_map)
-{
-    char *filename = "../tests/pos1";
 
-    cr_assert(get_map(filename));
-    }*/
+Test(bin_to_int, convertion)
+{
+    int nb = 32;
+
+    cr_assert_str_eq(int_to_bin(nb), "00000000000000000000000000010000");
+}
