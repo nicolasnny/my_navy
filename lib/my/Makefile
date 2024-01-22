@@ -44,6 +44,7 @@ SRC	=	my_showmem.c	\
 		my_nb_to_str.c	\
 		my_open_file.c	\
 		my_getnbr_size.c	\
+		mini_printf.c	\
 
 
 OBJ	=	$(SRC:.c=.o)
