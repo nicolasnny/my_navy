@@ -6,25 +6,38 @@
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "../include/navy_func.h"
 #include "../include/signal_codes.h"
+#include "navy_func.h"
 
-static void wait_for_attack(void)
+static int *wait_for_attack(int *coords)
 {
-    return;
+    while (!sig);
+    mini_printf("row = %d\n", sig);
+    coords[0] = sig;
+    sig = 0;
+    while (!sig);
+    mini_printf("col = %d\n", sig);
+    coords[1] = sig;
+    sig = 0;
+    return coords;
 }
 
-static int get_row(char *buffer)
+static char *get_row(char *buffer)
 {
-    int row = buffer[1] + '0';
+    int row = buffer[1] - '0';
 
+    mini_printf("row : %d\n", row);
     if (row > 0 && row < 9)
         return int_to_bin(row);
+    mini_printf("wrong row\n");
+    return NULL;
 }
 
-static int get_col(char *buffer)
+static char *get_col(char *buffer)
 {
-    switch (buffer[1]) {
+    switch (buffer[0]) {
         case 'A':
             return int_to_bin(0);
         case 'B':
@@ -42,39 +55,54 @@ static int get_col(char *buffer)
         case 'H':
             return int_to_bin(7);
         default:
-            return 84;
+            return NULL;
+    }
+}
+
+static ssize_t get_user_move(char **user_input, size_t *bufsize)
+{
+    ssize_t line_size = 0;
+
+    line_size = getline(user_input, bufsize, stdin);
+    if (line_size != 0)
+        user_input[line_size - 1] = '\0';
+    if (line_size == -1 && my_strlen(*user_input) == 0)
+        return 0;
+    if (!get_row(*user_input)) {
+        my_putstr("\nwrong position\n");
+        return 0;
+    }
+    if (!get_col(*user_input)) {
+        my_putstr("\nwrong position\n");
+        return 0;
     }
 }
 
 static void attack(int pid)
 {
-    char *user_input;
+    char *user_input = NULL;
     size_t bufsize = 0;
     int col;
     int row;
-    int state;
+    ssize_t line_size = 0;
 
-    my_putstr("attack: ");
-    getline(&user_input, &bufsize, stdin);
-    if (my_strlen(user_input) > 2 && get_col(user_input) != ERROR &&
-        get_row(user_input) != ERROR) {
-        send_message(pid, get_col(user_input));
-        send_message(pid, get_row(user_input));
-    } else {
-        my_putstr("wrong position\n");
-        attack(pid);
+    while (line_size == 0) {
+        mini_printf("attack: ");
+        line_size = get_user_move(&user_input, &bufsize);
     }
-    my_putstr("result: ");
-    my_putstr(user_input);
+    send_message(pid, get_col(user_input));
+    send_message(pid, get_row(user_input));
+    mini_printf("result: %s", user_input);
     if (sig & HIT)
-        my_putstr(":hit\n");
+        mini_printf(":hit\n");
     else
-        my_putstr(":missed\n");
+        mini_printf(":missed\n");
 }
 
 void launch_host_game(char **map, int host_pid, int guest_pid)
 {
     char **enemy_map = create_map();
+    int *coords = malloc(sizeof(int) * 2);
 
     while (lose(map)) {
         sig = 0;
@@ -83,16 +111,18 @@ void launch_host_game(char **map, int host_pid, int guest_pid)
         my_putstr("\nenemy map:\n");
         display_map(enemy_map);
         attack(guest_pid);
-        wait_for_attack();
+        wait_for_attack(coords);
     }
 }
 
 void launch_guest_game(char **map, int host_pid, int guest_pid)
 {
     char **enemy_map = create_map();
+    int *coords = malloc(sizeof(int) * 2);
 
     while (lose(map)) {
-        wait_for_attack();
+        mini_printf("in game loop\n");
+        coords = wait_for_attack(coords);
         my_putstr("my navy:\n");
         display_map(map);
         my_putstr("\nenemy map:\n");
