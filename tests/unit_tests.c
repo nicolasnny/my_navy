@@ -27,6 +27,13 @@ Test(err_handling, error_pop)
     cr_assert_eq(err_handling(2, args), ERROR);
 }
 
+Test(functionnal_test, err_handling)
+{
+    char *args[] = {"./my_navy"};
+
+    cr_assert_eq(my_navy(1, args), ERROR);
+}
+
 /*Test(bin_to_int, convertion)
 {
     int nb = 32;

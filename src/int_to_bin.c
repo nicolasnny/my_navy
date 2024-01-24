@@ -24,7 +24,12 @@ char *int_to_bin(int nb)
     char *str = malloc(sizeof(char) * (32 + 1));
     int index = get_bin_str(str, nb);
 
-    str[index] = '\0';
+    while (index < 31) {
+        str[index] = '0';
+        index++;
+    }
+    str[31] = '1';
+    str[32] = '\0';
     str = my_revstr(str);
     return str;
 }

@@ -21,6 +21,7 @@
 //--> main
 int guest_connect(char *pid, char *pos);
 int host_connect(char *pos);
+int my_navy(int ac, char **av);
 
 //--> users
 int guest_connect(char *pid, char *pos);
@@ -45,7 +46,6 @@ void add_zero(int value);
 void add_one(int value);
 bool message_finished(void);
 void print_bits(int value);
-int add_pattern(unsigned int nb);
 
 //--> display
 int display_map(char **map);
@@ -54,8 +54,8 @@ int display_flag_h(void);
 //--> game
 int check_hit(char **map, char *coords);
 int lose(char **map);
-void launch_host_game(char **map, int host_pid, int guest_pid);
-void launch_guest_game(char **map, int host_pid, int guest_pid);
+void launch_host_game(char **map, int guest_pid);
+void launch_guest_game(char **map, int host_pid);
 
 //--> convert
 char *int_to_bin(int nb);

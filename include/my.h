@@ -9,7 +9,7 @@
 #ifndef MY_H
     #define MY_H
 
-int my_putchar(char);
+void my_putchar(char);
 int my_putchar_err(char);
 int my_isneg(int nb);
 int my_put_nbr(int nb);
@@ -48,5 +48,6 @@ char *my_nb_to_str(int nb);
 int fs_open_file(char const *filePath);
 int my_getnbr_size(int nb);
 int mini_printf(char const *format, ...);
+int my_putstr_no_break(char const *str);
 
 #endif /*MY_H*/
