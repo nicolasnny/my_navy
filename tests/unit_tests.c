@@ -36,8 +36,8 @@ Test(err_handling, error_pop)
 
 Test(adding_pattern, pattern_add)
 {
-    char *msg = "0000000000000000";
+    unsigned int nb = 32;
 
-    add_pattern(msg);
-    cr_assert_str_eq(msg, "0010010010010000");
+    nb = add_pattern(nb);
+    cr_assert_eq(nb, 704643105);
 }

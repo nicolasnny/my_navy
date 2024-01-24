@@ -64,3 +64,18 @@ int guest_connect(char *pid, char *pos)
     launch_guest_game(map, host_pid, guest_pid);
     return 0;
 }
+
+int my_navy(int ac, char **av)
+{
+    int check = err_handling(ac, av);
+
+    signal(SIGUSR1, add_one);
+    signal(SIGUSR2, add_zero);
+    if (check == ERROR)
+        return ERROR;
+    if (ac == 2)
+        return host_connect(av[1]);
+    if (ac == 3)
+        return guest_connect(av[1], av[2]);
+    return 84;
+}

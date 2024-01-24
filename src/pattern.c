@@ -34,6 +34,5 @@ int add_pattern(unsigned int nb)
     pattern = add_zero_to_bin(pattern);
     for (int j = 0; j < 24; j++)
         pattern = add_zero_to_bin(pattern);
-    print_bits(pattern | nb);
     return pattern | nb;
 }
