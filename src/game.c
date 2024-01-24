@@ -13,11 +13,15 @@
 
 static int *wait_for_attack(int *coords)
 {
-    while (!sig);
+    sig = 0;
+    mini_printf("\nwaiting for enemy's attack...\n");
+    while (!message_finished());
+    print_bits(sig);
     mini_printf("row = %d\n", sig);
     coords[0] = sig;
     sig = 0;
-    while (!sig);
+    while (!message_finished());
+    print_bits(sig);
     mini_printf("col = %d\n", sig);
     coords[1] = sig;
     sig = 0;
@@ -104,7 +108,7 @@ void launch_host_game(char **map, int host_pid, int guest_pid)
     char **enemy_map = create_map();
     int *coords = malloc(sizeof(int) * 2);
 
-    while (lose(map)) {
+    while (!lose(map)) {
         sig = 0;
         my_putstr("my navy:\n");
         display_map(map);
@@ -120,13 +124,12 @@ void launch_guest_game(char **map, int host_pid, int guest_pid)
     char **enemy_map = create_map();
     int *coords = malloc(sizeof(int) * 2);
 
-    while (lose(map)) {
-        mini_printf("in game loop\n");
-        coords = wait_for_attack(coords);
+    while (!lose(map)) {
         my_putstr("my navy:\n");
         display_map(map);
         my_putstr("\nenemy map:\n");
         display_map(enemy_map);
+        coords = wait_for_attack(coords);
         attack(host_pid);
     }
 }

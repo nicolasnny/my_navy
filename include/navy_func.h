@@ -7,6 +7,7 @@
 
 #ifndef NAVY_FUNC_H
     #define NAVY_FUNC_H
+    #include <stdbool.h>
     #include "my.h"
     #include "navy_struct.h"
 
@@ -42,6 +43,8 @@ void clean_2d_array(char **array);
 void send_message(int pid, char *message);
 void add_zero(int value);
 void add_one(int value);
+bool message_finished(void);
+void print_bits(int value);
 
 //--> display
 int display_map(char **map);

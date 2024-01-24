@@ -9,5 +9,6 @@
     #define SIGNAL_H
     #define HIT_BIN 1 << 0
     #define MISS_BIN 1 << 1
+    #define END_OF_MSG 0x7E
 extern int sig;
 #endif /*   SIGNAL_H    */
