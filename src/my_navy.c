@@ -18,6 +18,8 @@ int sig;
 
 static void guest_pid(int value, siginfo_t *info, void *context)
 {
+    (void)context;
+    (void)value;
     sig = info->si_pid;
 }
 
@@ -46,13 +48,13 @@ int host_connect(char *pos)
     mini_printf("connected\n");
     guest_pid = sig;
     map = get_map(pos);
-    launch_host_game(map, host_pid, guest_pid);
+    launch_host_game(map, guest_pid);
+    return 0;
 }
 
 int guest_connect(char *pid, char *pos)
 {
     char **map;
-    int guest_pid = getpid();
     int host_pid = my_getnbr(pid);
 
     mini_printf("my_pid: %d\n", getpid());
@@ -61,6 +63,6 @@ int guest_connect(char *pid, char *pos)
     kill(host_pid, SIGUSR1);
     map = get_map(pos);
     mini_printf("before launching game\n");
-    launch_guest_game(map, host_pid, guest_pid);
+    launch_guest_game(map, host_pid);
     return 0;
 }
