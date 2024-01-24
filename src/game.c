@@ -16,11 +16,9 @@ static int *wait_for_attack(int *coords)
     sig = 0;
     mini_printf("\nwaiting for enemy's attack...\n");
     while (!message_finished());
-    mini_printf("row = %d\n", sig);
     coords[0] = sig;
     sig = 0;
     while (!message_finished());
-    mini_printf("col = %d\n", sig);
     coords[1] = sig;
     sig = 0;
     return coords;
@@ -93,8 +91,10 @@ static void attack(int pid)
     send_message(pid, get_row(user_input));
     mini_printf("result: ");
     my_putstr_no_break(user_input);
-    if (sig & HIT)
+    while(!message_finished());
+    if (sig == HIT) {
         my_putstr(":hit\n");
+    }
     else
         my_putstr(":missed\n");
 }
@@ -111,7 +111,8 @@ void launch_host_game(char **map, int guest_pid)
         my_putstr("\nenemy map:\n");
         display_map(enemy_map);
         attack(guest_pid);
-        wait_for_attack(coords);
+        coords = wait_for_attack(coords);
+        // send_result(guest_pid, coords, map);
     }
 }
 
@@ -119,13 +120,16 @@ void launch_guest_game(char **map, int host_pid)
 {
     char **enemy_map = create_map();
     int *coords = malloc(sizeof(int) * 2);
+    // printf("host pid = %d\n", host_pid);
 
     while (!lose(map)) {
+        sig = 0;
         my_putstr("my navy:\n");
         display_map(map);
         my_putstr("\nenemy map:\n");
         display_map(enemy_map);
         coords = wait_for_attack(coords);
+        send_result(host_pid, coords, map);
         attack(host_pid);
     }
 }

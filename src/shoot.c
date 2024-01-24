@@ -5,17 +5,18 @@
 ** Functions related to map change after oponent shooting
 */
 
+#include <stdbool.h>
 #include "navy_func.h"
 
-int check_hit(char **map, char *coords)
+int check_hit(char **map, int *coords)
 {
-    int col = 2 * (coords[0] - 'A');
-    int line = coords[1] - '0' - 1;
+    int col = coords[0] * 2;
+    int line = coords[1];
 
     if (is_num(map[line][col])) {
         map[line][col] = 'x';
-        return HIT;
+        return true;
     }
     map[line][col] = 'o';
-    return MISS;
+    return false;
 }

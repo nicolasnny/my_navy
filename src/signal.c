@@ -51,6 +51,14 @@ bool message_finished(void)
     return false;
 }
 
+void send_result(int pid, int *coords, char **map)
+{
+    if (check_hit(map, coords))
+        send_message(pid, int_to_bin(HIT));
+    else
+        send_message(pid, int_to_bin(MISS));
+}
+
 void send_message(int pid, char *message)
 {
     sig = 0;

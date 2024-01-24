@@ -15,8 +15,6 @@
     #define ERROR 84
     #define SHIP_NB 4
     #define MAP_SIZE 8
-    #define HIT 1
-    #define MISS 0
 
 //--> main
 int guest_connect(char *pid, char *pos);
@@ -46,13 +44,14 @@ void add_zero(int value);
 void add_one(int value);
 bool message_finished(void);
 void print_bits(int value);
+void send_result(int host_pid, int *coords, char **map);
 
 //--> display
 int display_map(char **map);
 int display_flag_h(void);
 
 //--> game
-int check_hit(char **map, char *coords);
+int check_hit(char **map, int *coords);
 int lose(char **map);
 void launch_host_game(char **map, int guest_pid);
 void launch_guest_game(char **map, int host_pid);
