@@ -20,9 +20,9 @@ void print_bits(unsigned int value)
 
     for (int i = numBits - 1; i >= 0; i--) {
         bit = (value >> i) & 1;
-        printf("%u", bit);
+        mini_printf("%u", bit);
     }
-    printf("\n");
+    mini_printf("\n");
 }
 
 static void send_bit(int pid, int bit)
@@ -45,21 +45,11 @@ void add_zero(int value)
     sig = sig << 1;
 }
 
-static void send_end_sequence(int pid)
-{
-    int bit;
-
-    for (int i = 32; i > 25; --i) {
-        bit = (END_OF_MSG >> i)&1;
-        send_bit(pid, bit);
-    }
-}
-
 bool message_finished(void)
 {
     print_bits(sig);
     if ((sig << 24) == END_OF_MSG) {
-        printf("message finished\n");
+        mini_printf("message finished\n");
         sig &= 0xFF;
         return true;
     }
@@ -69,14 +59,16 @@ bool message_finished(void)
 void send_message(int pid, char *message)
 {
     sig = 0;
-    for (int i = 0; i != my_strlen(message); i++) {
+    for (int i = 0; i != 32; i++) {
         if (message[i] == '1')
             send_bit(pid, 1);
         if (message[i] == '0')
             send_bit(pid, 0);
         usleep(10);
     }
-    send_end_sequence(pid);
-    printf("final sig value = ");
+    mini_printf("final sig value before adding pattern = ");
+    print_bits(sig);
+    sig = add_pattern(sig);
+    mini_printf("final sig value = ");
     print_bits(sig);
 }
