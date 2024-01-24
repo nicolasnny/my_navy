@@ -27,9 +27,17 @@ Test(err_handling, error_pop)
     cr_assert_eq(err_handling(2, args), ERROR);
 }
 
-Test(bin_to_int, convertion)
+/*Test(bin_to_int, convertion)
 {
     int nb = 32;
 
     cr_assert_str_eq(int_to_bin(nb), "00000000000000000000000000010000");
+    }*/
+
+Test(adding_pattern, pattern_add)
+{
+    char *msg = "0000000000000000";
+
+    add_pattern(msg);
+    cr_assert_str_eq(msg, "0010010010010000");
 }

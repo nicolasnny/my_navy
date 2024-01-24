@@ -16,9 +16,10 @@
 void print_bits(unsigned int value)
 {
     int numBits = sizeof(value) * 8;
+    unsigned int bit;
 
     for (int i = numBits - 1; i >= 0; i--) {
-        unsigned int bit = (value >> i) & 1;
+        bit = (value >> i) & 1;
         printf("%u", bit);
     }
     printf("\n");
@@ -46,8 +47,10 @@ void add_zero(int value)
 
 static void send_end_sequence(int pid)
 {
+    int bit;
+
     for (int i = 32; i > 25; --i) {
-        int bit = (END_OF_MSG >> i)&1;
+        bit = (END_OF_MSG >> i)&1;
         send_bit(pid, bit);
     }
 }
@@ -62,7 +65,6 @@ bool message_finished(void)
     }
     return false;
 }
-
 
 void send_message(int pid, char *message)
 {

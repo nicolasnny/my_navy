@@ -45,6 +45,7 @@ void add_zero(int value);
 void add_one(int value);
 bool message_finished(void);
 void print_bits(int value);
+int add_pattern(unsigned int nb);
 
 //--> display
 int display_map(char **map);
