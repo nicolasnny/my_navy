@@ -62,8 +62,8 @@ static ssize_t get_user_move(char **user_input, size_t *bufsize)
     ssize_t line_size = 0;
 
     line_size = getline(user_input, bufsize, stdin);
-    if (line_size != 0)
-        user_input[line_size - 1] = '\0';
+    if (line_size > 0)
+        (*user_input)[line_size - 1] = '\0';
     if (line_size == -1 && my_strlen(*user_input) == 0)
         return 0;
     if (!get_row(*user_input)) {
@@ -84,52 +84,62 @@ static void attack(int pid)
     ssize_t line_size = 0;
 
     while (line_size == 0) {
-        mini_printf("attack: ");
+        mini_printf("\nattack: ");
         line_size = get_user_move(&user_input, &bufsize);
     }
     send_message(pid, get_col(user_input));
     send_message(pid, get_row(user_input));
-    mini_printf("result: ");
+    mini_printf("\nresult: ");
     my_putstr_no_break(user_input);
-    while(!message_finished());
-    if (sig == HIT) {
+    while (!message_finished());
+    if (sig == HIT)
         my_putstr(":hit\n");
-    }
     else
         my_putstr(":missed\n");
+    free(user_input);
 }
 
-void launch_host_game(char **map, int guest_pid)
+int launch_host_game(char **map, int guest_pid)
 {
     char **enemy_map = create_map();
     int *coords = malloc(sizeof(int) * 2);
 
     while (!lose(map)) {
+        while (!message_finished());
+        if (sig == WIN)
+            return 1;
+        send_message(guest_pid, int_to_bin(CONTINUE));
         sig = 0;
-        my_putstr("my navy:\n");
+        my_putstr("\nmy navy:\n");
         display_map(map);
         my_putstr("\nenemy map:\n");
         display_map(enemy_map);
         attack(guest_pid);
         coords = wait_for_attack(coords);
-        // send_result(guest_pid, coords, map);
+        send_result(guest_pid, coords, map, enemy_map);
     }
+    return 0;
 }
 
-void launch_guest_game(char **map, int host_pid)
+int launch_guest_game(char **map, int host_pid)
 {
     char **enemy_map = create_map();
     int *coords = malloc(sizeof(int) * 2);
-    // printf("host pid = %d\n", host_pid);
 
     while (!lose(map)) {
+        send_message(host_pid, int_to_bin(CONTINUE));
+        while (!message_finished());
+        if (sig == WIN)
+            return 1;
         sig = 0;
-        my_putstr("my navy:\n");
+        my_putstr("\nmy navy:\n");
         display_map(map);
         my_putstr("\nenemy map:\n");
         display_map(enemy_map);
         coords = wait_for_attack(coords);
-        send_result(host_pid, coords, map);
+        send_result(host_pid, coords, map, enemy_map);
         attack(host_pid);
     }
+    send_message(host_pid, int_to_bin(WIN));
+    return 0;
 }

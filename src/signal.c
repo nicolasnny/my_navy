@@ -15,18 +15,6 @@
 #include "../include/signal_codes.h"
 #include "../include/my.h"
 
-void print_bits(int value)
-{
-    int numBits = sizeof(value) * 8;
-    unsigned int bit;
-
-    for (int i = numBits - 1; i >= 0; i--) {
-        bit = (value >> i) & 1;
-        printf("%u", bit);
-    }
-    printf("\n");
-}
-
 void add_one(int value)
 {
     (void)value;
@@ -51,12 +39,15 @@ bool message_finished(void)
     return false;
 }
 
-void send_result(int pid, int *coords, char **map)
+void send_result(int pid, int *coords, char **filled_map, char **empty_map)
 {
-    if (check_hit(map, coords))
+    if (check_hit(filled_map, coords)) {
+        fill_empty_map(empty_map, coords, HIT);
         send_message(pid, int_to_bin(HIT));
-    else
+    } else {
         send_message(pid, int_to_bin(MISS));
+        fill_empty_map(empty_map, coords, MISS);
+    }
 }
 
 void send_message(int pid, char *message)

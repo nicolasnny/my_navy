@@ -41,15 +41,19 @@ int host_connect(char *pos)
     int host_pid = getpid();
 
     mini_printf("my_pid: %d\n", host_pid);
-    mini_printf("waiting for connection...\n");
+    mini_printf("\nwaiting for enemy...\n");
     guest_pid = get_guest_pid();
     signal(SIGUSR1, add_one);
     signal(SIGUSR2, add_zero);
-    mini_printf("connected\n");
+    mini_printf("\nenemy connected\n");
     guest_pid = sig;
     map = get_map(pos);
-    launch_host_game(map, guest_pid);
-    return 0;
+    if (!launch_host_game(map, guest_pid)) {
+        mini_printf("\nenemy won\n");
+        return 0;
+    }
+    mini_printf("\nI won\n");
+    return 1;
 }
 
 int guest_connect(char *pid, char *pos)
@@ -61,10 +65,14 @@ int guest_connect(char *pid, char *pos)
     signal(SIGUSR1, add_one);
     signal(SIGUSR2, add_zero);
     kill(host_pid, SIGUSR1);
+    mini_printf("\nsuccessfully connected to enemy\n");
     map = get_map(pos);
-    mini_printf("before launching game\n");
-    launch_guest_game(map, host_pid);
-    return 0;
+    if (!launch_guest_game(map, host_pid)) {
+        mini_printf("\nenemy won\n");
+        return 0;
+    }
+    mini_printf("\nI won\n");
+    return 1;
 }
 
 int my_navy(int ac, char **av)

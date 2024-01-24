@@ -6,6 +6,7 @@
 */
 
 #include <stdbool.h>
+#include "../include/signal_codes.h"
 #include "navy_func.h"
 
 int check_hit(char **map, int *coords)
@@ -19,4 +20,15 @@ int check_hit(char **map, int *coords)
     }
     map[line][col] = 'o';
     return false;
+}
+
+void fill_empty_map(char **map, int *coords, int state)
+{
+    int col = coords[0] * 2;
+    int line = coords[1];
+
+    if (state == HIT)
+        map[line][col] = 'x';
+    else
+        map[line][col] = 'o';
 }

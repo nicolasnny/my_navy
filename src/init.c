@@ -20,7 +20,6 @@ char **create_map(void)
     int line = 0;
 
     while (line < MAP_SIZE) {
-        //printf("line: %d", line);
         map[line] = malloc(sizeof(char) * (MAP_SIZE * 2 + 1));
         for (int i = 0; i < MAP_SIZE * 2; i += 2) {
             map[line][i] = '.';
@@ -30,8 +29,6 @@ char **create_map(void)
         line++;
     }
     map[line] = NULL;
-    printf("after map creation\n");
-    display_map(map);
     return map;
 }
 

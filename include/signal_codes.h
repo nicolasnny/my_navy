@@ -9,5 +9,8 @@
     #define SIGNAL_H
     #define HIT 54
     #define MISS 404
+    #define CONTINUE 69
+    #define LOSS 42
+    #define WIN 100
 extern int sig;
 #endif /*   SIGNAL_H    */
