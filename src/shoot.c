@@ -6,7 +6,7 @@
 */
 
 #include <stdbool.h>
-#include "../include/signal_codes.h"
+#include "signal_codes.h"
 #include "navy_func.h"
 
 int check_hit(char **map, int *coords)

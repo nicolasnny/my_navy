@@ -7,6 +7,7 @@
 
 #include <criterion/criterion.h>
 #include "../include/navy_func.h"
+#include <criterion/redirect.h>
 
 /*
 // Passes if Expression is true
@@ -19,7 +20,13 @@ cr_assert_eq ( Actual , Expected , FormatString , ...) ;
 cr_assert_neq ( Actual , Expected , FormatString , ...) ;
 */
 
-Test(unit_test, wrong_arg_number)
+void redirect_all_stdout(void)
+{
+    cr_redirect_stdout();
+    cr_redirect_stderr();
+}
+
+Test(unit_test, wrong_arg_number, .init=redirect_all_stdout)
 {
     char *args[] = {"./my_navy"};
     char *args2[] = {"./my_navy", "1234", "figh", "feogho"};
@@ -28,7 +35,7 @@ Test(unit_test, wrong_arg_number)
     cr_assert_eq(err_handling(4,  args2), ERROR);
 }
 
-Test(unit_test, wrong_file)
+Test(unit_test, wrong_file, .init=redirect_all_stdout)
 {
     char *args[] = {"./my_navy", "pop"};
     char *args2[] = {"./my_navy", "4586", "not_a_file"};
@@ -37,7 +44,7 @@ Test(unit_test, wrong_file)
     cr_assert_eq(err_handling(3, args2), ERROR);
 }
 
-Test(unit_test, good_file)
+Test(unit_test, good_file, .init=redirect_all_stdout)
 {
     char *args[] = {"./my_navy", "tests/pos1"};
     char *args2[] = {"./my_navy", "4586", "tests/pos1"};
@@ -46,21 +53,21 @@ Test(unit_test, good_file)
     cr_assert_eq(err_handling(3, args2), SUCCESS);
 }
 
-Test(unit_test, losing_condition)
+Test(unit_test, losing_condition, .init=redirect_all_stdout)
 {
     char *map[] = {"......XXX.", "....XXX.", NULL};
 
     cr_assert_eq(lose(map), 1);
 }
 
-Test(unit_test, losing_condition_2)
+Test(unit_test, losing_condition_2, .init=redirect_all_stdout)
 {
     char *map[] = {"...4..", "...4..", NULL};
 
     cr_assert_eq(lose(map), 0);
 }
 
-Test(unit_test, get_coords_from_line)
+Test(unit_test, get_coords_from_line, .init=redirect_all_stdout)
 {
     char line[] = "A6:E3";
 
@@ -68,7 +75,7 @@ Test(unit_test, get_coords_from_line)
     cr_assert_str_eq(get_coord(line + 3), "E3");
 }
 
-Test(unit_test, int_to_str_bin)
+Test(unit_test, int_to_str_bin, .init=redirect_all_stdout)
 {
     int nb1 = 0;
     int nb2 = 789;
@@ -77,9 +84,23 @@ Test(unit_test, int_to_str_bin)
     cr_assert_str_eq(int_to_bin(nb2), "10000000000000000000001100010101");
 }
 
+Test(unit_test, map_init, .init=redirect_all_stdout)
+{
+    char **map = get_map("tests/pos1");
+
+    cr_assert(map);
+}
+
+Test(unit_test, check_hit, .init=redirect_all_stdout)
+{
+    char **map = get_map("tests/pos1");
+
+    cr_assert(map);
+}
+
 /*----- FUNCTIONNAL TEST ----*/
 
-Test(functionnal_test, err_handling)
+Test(functionnal_test, err_handling, .init=redirect_all_stdout)
 {
     char *args[] = {"./my_navy"};
     char *args3[] = {"./my_navy", "pop"};
