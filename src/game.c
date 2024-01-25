@@ -133,7 +133,7 @@ int launch_host_game(char **map, int guest_pid)
         sig = 0;
         my_putstr("\nmy navy:\n");
         display_map(map);
-        my_putstr("\nenemy map:\n");
+        my_putstr("\nenemy navy:\n");
         display_map(enemy_map);
         attack(guest_pid, enemy_map);
         coords = wait_for_attack(coords, map);
@@ -156,7 +156,7 @@ int launch_guest_game(char **map, int host_pid)
         sig = 0;
         my_putstr("\nmy navy:\n");
         display_map(map);
-        my_putstr("\nenemy map:\n");
+        my_putstr("\nenemy navy:\n");
         display_map(enemy_map);
         coords = wait_for_attack(coords, map);
         send_result(host_pid, coords, map);
