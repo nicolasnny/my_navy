@@ -7,6 +7,7 @@
 
 #include <criterion/criterion.h>
 #include "../include/navy_func.h"
+#include "../include/signal_codes.h"
 #include <criterion/redirect.h>
 
 /*
@@ -89,6 +90,7 @@ Test(unit_test, map_init, .init=redirect_all_stdout)
     char **map = get_map("tests/pos1");
 
     cr_assert(map);
+    free(map);
 }
 
 Test(unit_test, check_hit, .init=redirect_all_stdout)
@@ -100,6 +102,19 @@ Test(unit_test, check_hit, .init=redirect_all_stdout)
     cr_assert_eq(check_hit(map, coord), false);
     coord[0] = 4;
     cr_assert_eq(check_hit(map, coord), false);
+    free(map);
+}
+
+Test(unit_test, fill_ennemy_map, .init=redirect_all_stdout)
+{
+    char **map = create_map();
+    int coord[] = {2, 1};
+
+    fill_empty_map(map, coord, HIT);
+    cr_assert_eq(map[coord[1] - 1][coord[0] * 2], 'x');
+    coord[1] = 4;
+    fill_empty_map(map, coord, MISS);
+    cr_assert_eq(map[coord[1] - 1][coord[0] * 2], 'o');
 }
 
 /*----- FUNCTIONNAL TEST ----*/
