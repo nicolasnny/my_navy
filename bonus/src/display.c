@@ -5,6 +5,7 @@
 ** Dislay everything related to my_navy project
 */
 
+#include <ncurses.h>
 #include "navy_func.h"
 
 int display_map(char **map)
@@ -13,13 +14,13 @@ int display_map(char **map)
 
     if (size != MAP_SIZE)
         return ERROR;
-    my_putstr(" |A B C D E F G H\n");
-    my_putstr("-+---------------\n");
-    for (int line = 0; line < 8; line++) {
-        my_put_nbr(line + 1);
-        my_putchar('|');
-        my_putstr(map[line]);
-        my_putchar('\n');
+    move(line + 3, COLS / 2 +my_strstrlen(" |A B C D E F G H\n") / 2);
+    printw(" |A B C D E F G H\n");
+    move(line + 4, COLS / 2 +my_strstrlen("-+---------------\n") / 2);
+    printw("-+---------------\n");
+    for (int line = 0; line < MAP_SIZE; line++) {
+        move(line + 5, COLS / 2 - my_strlen(map[line]) / 2)
+        printw("%d|%s\n", line + 1, map[line]);
     }
     return 0;
 }
