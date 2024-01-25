@@ -68,13 +68,10 @@ int guest_connect(char *pid, char *pos)
     char **map;
     int host_pid = my_getnbr(pid);
 
+    mini_printf("my_pid: %d\n", getpid());
     signal(SIGUSR1, add_one);
     signal(SIGUSR2, add_zero);
-    if (kill(host_pid, SIGUSR1) != 0 || host_pid == 0) {
-        my_putstr_err("Error in arguments: type \"./my_navy -h\" for help\n");
-        return ERROR;
-    }
-    mini_printf("my_pid: %d\n", getpid());
+    kill(host_pid, SIGUSR1);
     mini_printf("\nsuccessfully connected to enemy\n");
     map = get_map(pos);
     if (!launch_guest_game(map, host_pid)) {
