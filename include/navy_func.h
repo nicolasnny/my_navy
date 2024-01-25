@@ -13,6 +13,7 @@
 
 //---> constant values
     #define ERROR 84
+    #define SUCCESS 0
     #define SHIP_NB 4
     #define MAP_SIZE 8
 
