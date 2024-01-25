@@ -66,6 +66,10 @@ static ssize_t get_user_move(char **user_input, size_t *bufsize)
         (*user_input)[line_size - 1] = '\0';
     if (line_size == -1 && my_strlen(*user_input) == 0)
         return 0;
+    if (my_strlen(*user_input) != 2) {
+        my_putstr("\nwrong position\n");
+        return 0;
+    }
     if (!get_row(*user_input)) {
         my_putstr("\nwrong position\n");
         return 0;

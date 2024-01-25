@@ -26,7 +26,7 @@ static void guest_pid(int value, siginfo_t *info, void *context)
 static int get_guest_pid(void)
 {
     struct sigaction s;
-    int sigset_array_size = (1024 / (8 * sizeof (unsigned long int)));
+    int sigset_array_size = (1024 / (8 * sizeof(unsigned long int)));
     sigset_t sigset;
 
     for (int i = 0; i != sigset_array_size; i++)

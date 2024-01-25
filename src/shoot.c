@@ -18,7 +18,8 @@ int check_hit(char **map, int *coords)
         map[line][col] = 'x';
         return true;
     }
-    map[line][col] = 'o';
+    if (map[line][col] != 'x')
+        map[line][col] = 'o';
     return false;
 }
 
@@ -29,6 +30,6 @@ void fill_empty_map(char **map, int *coords, int state)
 
     if (state == HIT)
         map[line][col] = 'x';
-    else
+    if (map[line][col] != 'x')
         map[line][col] = 'o';
 }
