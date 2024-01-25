@@ -8,6 +8,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <ncurses.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include "../include/navy_func.h"
@@ -47,19 +48,19 @@ int host_connect(char *pos)
     int guest_pid;
     int host_pid = getpid();
 
-    mini_printf("my_pid: %d\n", host_pid);
-    mini_printf("\nwaiting for enemy...\n");
+    printw("my_pid: %d\n", host_pid);
+    printw("\nwaiting for enemy...\n");
     guest_pid = get_guest_pid();
     signal(SIGUSR1, add_one);
     signal(SIGUSR2, add_zero);
-    mini_printf("\nenemy connected\n");
+    printw("\nenemy connected\n");
     guest_pid = sig;
     map = get_map(pos);
     if (!launch_host_game(map, guest_pid)) {
-        mini_printf("\nenemy won\n");
+        printw("\nenemy won\n");
         return 1;
     }
-    mini_printf("\nI won\n");
+    printw("\nI won\n");
     return 0;
 }
 
@@ -68,17 +69,17 @@ int guest_connect(char *pid, char *pos)
     char **map;
     int host_pid = my_getnbr(pid);
 
-    mini_printf("my_pid: %d\n", getpid());
+    printw("my_pid: %d\n", getpid());
     signal(SIGUSR1, add_one);
     signal(SIGUSR2, add_zero);
     kill(host_pid, SIGUSR1);
-    mini_printf("\nsuccessfully connected to enemy\n");
+    printw("\nsuccessfully connected to enemy\n");
     map = get_map(pos);
     if (!launch_guest_game(map, host_pid)) {
-        mini_printf("\nenemy won\n");
+        printw("\nenemy won\n");
         return 1;
     }
-    mini_printf("\nI won\n");
+    printw("\nI won\n");
     return 0;
 }
 
@@ -88,6 +89,7 @@ int my_navy(int ac, char **av)
 
     signal(SIGUSR1, add_one);
     signal(SIGUSR2, add_zero);
+    keypad(initscr(), 1);
     if (check == ERROR)
         return ERROR;
     if (ac == 2)

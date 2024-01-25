@@ -28,6 +28,7 @@ char **create_map(void)
         map[line][MAP_SIZE * 2] = '\0';
         line++;
     }
+    map[0][0] = '+';
     map[line] = NULL;
     return map;
 }
@@ -110,6 +111,7 @@ char **get_map(char *filepath)
     int coord_nb = 0;
     int ret = 0;
 
+    map[0][0] = '+';
     for (int i = 0; i < SHIP_NB && ret == 0; i++) {
         ret = put_ships(map, i + 2, coords[coord_nb], coords[coord_nb + 1]);
         coord_nb += 2;

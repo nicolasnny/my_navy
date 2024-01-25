@@ -14,9 +14,7 @@ int display_map(char **map)
 
     if (size != MAP_SIZE)
         return ERROR;
-    move(line + 3, 0);
     printw(" |A B C D E F G H\n");
-    move(line + 4, 0);
     printw("-+---------------\n");
     for (int line = 0; line < MAP_SIZE; line++)
         printw("%d|%s\n", line + 1, map[line]);
