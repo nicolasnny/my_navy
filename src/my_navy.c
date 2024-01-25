@@ -26,7 +26,14 @@ static void guest_pid(int value, siginfo_t *info, void *context)
 static int get_guest_pid(void)
 {
     struct sigaction s;
+    int sigset_array_size = (1024 / (8 * sizeof (unsigned long int)));
+    sigset_t sigset;
 
+    for (int i = 0; i != sigset_array_size; i++)
+        sigset.__val[i] = 0;
+    s.sa_handler = NULL;
+    s.sa_mask = sigset;
+    s.sa_restorer = NULL;
     s.sa_sigaction = &guest_pid;
     s.sa_flags = SA_SIGINFO;
     sigaction(SIGUSR1, &s, NULL);
