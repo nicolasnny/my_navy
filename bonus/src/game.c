@@ -6,7 +6,6 @@
 */
 
 #include <stdio.h>
-#include <ncurses.h>
 #include <stdlib.h>
 #include "../include/navy_func.h"
 #include "../include/signal_codes.h"
@@ -15,21 +14,19 @@
 static int *wait_for_attack(int *coords, char **filled_map)
 {
     sig = 0;
-    printw("\nwaiting for enemy's attack...\n");
-    refresh();
+    mini_printf("\nwaiting for enemy's attack...\n");
     while (!message_finished());
     coords[0] = sig;
     sig = 0;
     while (!message_finished());
     coords[1] = sig;
     sig = 0;
-    if (is_num(filled_map[coords[0] * 2][coords[1]]))
-        printw("\nresult: %c%c:hit\n", coords[0] + 65, coords[1] + 49);
+    if (is_num(filled_map[coords[1]][coords[0] * 2]))
+        mini_printf("\nresult: %c%c:hit\n", coords[0] + 65, coords[1] + 49);
     else {
-        printw("\nresult: %c%c:missed\n", coords[0] + 65,
+        mini_printf("\nresult: %c%c:missed\n", coords[0] + 65,
             coords[1] + 49);
     }
-    refresh();
     return coords;
 }
 
@@ -76,18 +73,15 @@ static ssize_t get_user_move(char **user_input, size_t *bufsize)
     if (line_size == -1 && my_strlen(*user_input) == 0)
         return 0;
     if (my_strlen(*user_input) != 2) {
-        printw("\nwrong position\n");
-        refresh();
+        my_putstr("\nwrong position\n");
         return 0;
     }
     if (!get_row(*user_input)) {
-        printw("\nwrong position\n");
-        refresh();
+        my_putstr("\nwrong position\n");
         return 0;
     }
     if (!get_col(*user_input)) {
-        printw("\nwrong position\n");
-        refresh();
+        my_putstr("\nwrong position\n");
         return 0;
     }
     return 1;
@@ -96,13 +90,12 @@ static ssize_t get_user_move(char **user_input, size_t *bufsize)
 static void check_collision_sig(int *coords, char **empty_map)
 {
     if (sig == HIT) {
-        printw(":hit\n");
+        my_putstr(":hit\n");
         fill_empty_map(empty_map, coords, HIT);
     } else {
-        printw(":missed\n");
+        my_putstr(":missed\n");
         fill_empty_map(empty_map, coords, MISS);
     }
-    refresh();
 }
 
 static void attack(int pid, char **empty_map)
@@ -113,14 +106,14 @@ static void attack(int pid, char **empty_map)
     ssize_t line_size = 0;
 
     while (line_size == 0) {
-        printw("\nattack: ");
+        mini_printf("\nattack: ");
         line_size = get_user_move(&user_input, &bufsize);
     }
     coords[0] = user_input[0] - 65;
     coords[1] = user_input[1] - 48;
     send_message(pid, get_col(user_input));
     send_message(pid, get_row(user_input));
-    printw("\nresult: ");
+    mini_printf("\nresult: ");
     my_putstr_no_break(user_input);
     while (!message_finished());
     check_collision_sig(coords, empty_map);
@@ -137,10 +130,9 @@ int launch_host_game(char **map, int guest_pid)
         if (sig == WIN)
             return 1;
         send_message(guest_pid, int_to_bin(CONTINUE));
-        sig = 0;
-        printw("\nmy navy:\n");
+        my_putstr("\nmy navy:\n");
         display_map(map);
-        printw("\nenemy navy:\n");
+        my_putstr("\nenemy navy:\n");
         display_map(enemy_map);
         attack(guest_pid, enemy_map);
         coords = wait_for_attack(coords, map);
@@ -161,9 +153,9 @@ int launch_guest_game(char **map, int host_pid)
         if (sig == WIN)
             return 1;
         sig = 0;
-        printw("\nmy navy:\n");
+        my_putstr("\nmy navy:\n");
         display_map(map);
-        printw("\nenemy navy:\n");
+        my_putstr("\nenemy navy:\n");
         display_map(enemy_map);
         coords = wait_for_attack(coords, map);
         send_result(host_pid, coords, map);

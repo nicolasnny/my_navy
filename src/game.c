@@ -21,7 +21,7 @@ static int *wait_for_attack(int *coords, char **filled_map)
     while (!message_finished());
     coords[1] = sig;
     sig = 0;
-    if (is_num(filled_map[coords[0] * 2][coords[1]]))
+    if (is_num(filled_map[coords[1]][coords[0] * 2]))
         mini_printf("\nresult: %c%c:hit\n", coords[0] + 65, coords[1] + 49);
     else {
         mini_printf("\nresult: %c%c:missed\n", coords[0] + 65,
@@ -130,7 +130,6 @@ int launch_host_game(char **map, int guest_pid)
         if (sig == WIN)
             return 1;
         send_message(guest_pid, int_to_bin(CONTINUE));
-        sig = 0;
         my_putstr("\nmy navy:\n");
         display_map(map);
         my_putstr("\nenemy navy:\n");

@@ -28,7 +28,7 @@ NAME	=	my_navy
 
 LDFLAGS =	-L./lib/my
 
-LDLIBS	=	-lmy -lncurses
+LDLIBS	=	-lmy
 
 CPPFLAGS	=	-I./include/
 
