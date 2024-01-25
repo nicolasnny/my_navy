@@ -133,6 +133,7 @@ int launch_host_game(char **map, int guest_pid)
         coords = wait_for_attack(coords);
         send_result(guest_pid, coords, map);
     }
+    send_message(guest_pid, int_to_bin(WIN));
     return 0;
 }
 

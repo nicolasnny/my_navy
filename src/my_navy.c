@@ -57,10 +57,10 @@ int host_connect(char *pos)
     map = get_map(pos);
     if (!launch_host_game(map, guest_pid)) {
         mini_printf("\nenemy won\n");
-        return 0;
+        return 1;
     }
     mini_printf("\nI won\n");
-    return 1;
+    return 0;
 }
 
 int guest_connect(char *pid, char *pos)
@@ -76,10 +76,10 @@ int guest_connect(char *pid, char *pos)
     map = get_map(pos);
     if (!launch_guest_game(map, host_pid)) {
         mini_printf("\nenemy won\n");
-        return 0;
+        return 1;
     }
     mini_printf("\nI won\n");
-    return 1;
+    return 0;
 }
 
 int my_navy(int ac, char **av)
