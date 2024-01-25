@@ -14,14 +14,12 @@ int display_map(char **map)
 
     if (size != MAP_SIZE)
         return ERROR;
-    move(line + 3, COLS / 2 +my_strstrlen(" |A B C D E F G H\n") / 2);
+    move(line + 3, 0);
     printw(" |A B C D E F G H\n");
-    move(line + 4, COLS / 2 +my_strstrlen("-+---------------\n") / 2);
+    move(line + 4, 0);
     printw("-+---------------\n");
-    for (int line = 0; line < MAP_SIZE; line++) {
-        move(line + 5, COLS / 2 - my_strlen(map[line]) / 2)
+    for (int line = 0; line < MAP_SIZE; line++)
         printw("%d|%s\n", line + 1, map[line]);
-    }
     return 0;
 }
 
