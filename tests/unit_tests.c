@@ -94,8 +94,12 @@ Test(unit_test, map_init, .init=redirect_all_stdout)
 Test(unit_test, check_hit, .init=redirect_all_stdout)
 {
     char **map = get_map("tests/pos1");
+    int coord[] = {2, 1};
 
-    cr_assert(map);
+    cr_assert_eq(check_hit(map, coord), true);
+    cr_assert_eq(check_hit(map, coord), false);
+    coord[0] = 4;
+    cr_assert_eq(check_hit(map, coord), false);
 }
 
 /*----- FUNCTIONNAL TEST ----*/
