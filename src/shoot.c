@@ -25,7 +25,7 @@ int check_hit(char **map, int *coords)
 void fill_empty_map(char **map, int *coords, int state)
 {
     int col = coords[0] * 2;
-    int line = coords[1];
+    int line = coords[1] - 1;
 
     if (state == HIT)
         map[line][col] = 'x';

@@ -77,9 +77,21 @@ static ssize_t get_user_move(char **user_input, size_t *bufsize)
     return 1;
 }
 
-static void attack(int pid)
+static void check_collision_sig(int *coords, char **empty_map)
+{
+    if (sig == HIT) {
+        my_putstr(":hit\n");
+        fill_empty_map(empty_map, coords, HIT);
+    } else {
+        my_putstr(":missed\n");
+        fill_empty_map(empty_map, coords, MISS);
+    }
+}
+
+static void attack(int pid, char **empty_map)
 {
     char *user_input = NULL;
+    int *coords = malloc(sizeof(int) * 2);
     size_t bufsize = 0;
     ssize_t line_size = 0;
 
@@ -87,15 +99,14 @@ static void attack(int pid)
         mini_printf("\nattack: ");
         line_size = get_user_move(&user_input, &bufsize);
     }
+    coords[0] = user_input[0] - 65;
+    coords[1] = user_input[1] - 48;
     send_message(pid, get_col(user_input));
     send_message(pid, get_row(user_input));
     mini_printf("\nresult: ");
     my_putstr_no_break(user_input);
     while (!message_finished());
-    if (sig == HIT)
-        my_putstr(":hit\n");
-    else
-        my_putstr(":missed\n");
+    check_collision_sig(coords, empty_map);
     free(user_input);
 }
 
@@ -114,9 +125,9 @@ int launch_host_game(char **map, int guest_pid)
         display_map(map);
         my_putstr("\nenemy map:\n");
         display_map(enemy_map);
-        attack(guest_pid);
+        attack(guest_pid, enemy_map);
         coords = wait_for_attack(coords);
-        send_result(guest_pid, coords, map, enemy_map);
+        send_result(guest_pid, coords, map);
     }
     return 0;
 }
@@ -137,8 +148,8 @@ int launch_guest_game(char **map, int host_pid)
         my_putstr("\nenemy map:\n");
         display_map(enemy_map);
         coords = wait_for_attack(coords);
-        send_result(host_pid, coords, map, enemy_map);
-        attack(host_pid);
+        send_result(host_pid, coords, map);
+        attack(host_pid, enemy_map);
     }
     send_message(host_pid, int_to_bin(WIN));
     return 0;

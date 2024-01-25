@@ -39,14 +39,12 @@ bool message_finished(void)
     return false;
 }
 
-void send_result(int pid, int *coords, char **filled_map, char **empty_map)
+void send_result(int pid, int *coords, char **filled_map)
 {
     if (check_hit(filled_map, coords)) {
-        fill_empty_map(empty_map, coords, HIT);
         send_message(pid, int_to_bin(HIT));
     } else {
         send_message(pid, int_to_bin(MISS));
-        fill_empty_map(empty_map, coords, MISS);
     }
 }
 

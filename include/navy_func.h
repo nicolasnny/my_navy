@@ -43,7 +43,7 @@ void send_message(int pid, char *message);
 void add_zero(int value);
 void add_one(int value);
 bool message_finished(void);
-void send_result(int pid, int *coords, char **filled_map, char **empty_map);
+void send_result(int pid, int *coords, char **filled_map);
 
 
 //--> display
