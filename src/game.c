@@ -11,7 +11,7 @@
 #include "../include/signal_codes.h"
 #include "navy_func.h"
 
-static int *wait_for_attack(int *coords)
+static int *wait_for_attack(int *coords, char **filled_map)
 {
     sig = 0;
     mini_printf("\nwaiting for enemy's attack...\n");
@@ -21,6 +21,12 @@ static int *wait_for_attack(int *coords)
     while (!message_finished());
     coords[1] = sig;
     sig = 0;
+    if (is_num(filled_map[coords[0] * 2][coords[1]]))
+        mini_printf("\nresult: %c%c:hit\n", coords[0] + 65, coords[1] + 49);
+    else {
+        mini_printf("\nresult: %c%c:missed\n", coords[0] + 65,
+            coords[1] + 49);
+    }
     return coords;
 }
 
@@ -130,7 +136,7 @@ int launch_host_game(char **map, int guest_pid)
         my_putstr("\nenemy map:\n");
         display_map(enemy_map);
         attack(guest_pid, enemy_map);
-        coords = wait_for_attack(coords);
+        coords = wait_for_attack(coords, map);
         send_result(guest_pid, coords, map);
     }
     send_message(guest_pid, int_to_bin(WIN));
@@ -152,7 +158,7 @@ int launch_guest_game(char **map, int host_pid)
         display_map(map);
         my_putstr("\nenemy map:\n");
         display_map(enemy_map);
-        coords = wait_for_attack(coords);
+        coords = wait_for_attack(coords, map);
         send_result(host_pid, coords, map);
         attack(host_pid, enemy_map);
     }
