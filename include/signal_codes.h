@@ -12,5 +12,6 @@
     #define CONTINUE 69
     #define LOSS 42
     #define WIN 100
+    #define BREAK 667
 extern int sig;
 #endif /*   SIGNAL_H    */

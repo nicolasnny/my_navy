@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include "../include/navy_func.h"
 #include "../include/signal_codes.h"
 #include "navy_func.h"
@@ -16,6 +17,8 @@ static int *wait_for_attack(int *coords, char **filled_map)
     sig = 0;
     mini_printf("\nwaiting for enemy's attack...\n");
     while (!message_finished());
+    if (sig == BREAK)
+        return NULL;
     coords[0] = sig;
     sig = 0;
     while (!message_finished());
@@ -120,6 +123,14 @@ static void attack(int pid, char **empty_map)
     free(user_input);
 }
 
+static void display_all_maps(char **my_map, char **enemy_map)
+{
+    my_putstr("\nmy navy:\n");
+    display_map(my_map);
+    my_putstr("\nenemy navy:\n");
+    display_map(enemy_map);
+}
+
 int launch_host_game(char **map, int guest_pid)
 {
     char **enemy_map = create_map();
@@ -130,12 +141,11 @@ int launch_host_game(char **map, int guest_pid)
         if (sig == WIN)
             return 1;
         send_message(guest_pid, int_to_bin(CONTINUE));
-        my_putstr("\nmy navy:\n");
-        display_map(map);
-        my_putstr("\nenemy navy:\n");
-        display_map(enemy_map);
+        display_all_maps(map, enemy_map);
         attack(guest_pid, enemy_map);
         coords = wait_for_attack(coords, map);
+        if (!coords)
+            return 1;
         send_result(guest_pid, coords, map);
     }
     send_message(guest_pid, int_to_bin(WIN));
@@ -152,13 +162,13 @@ int launch_guest_game(char **map, int host_pid)
         while (!message_finished());
         if (sig == WIN)
             return 1;
-        sig = 0;
-        my_putstr("\nmy navy:\n");
-        display_map(map);
-        my_putstr("\nenemy navy:\n");
-        display_map(enemy_map);
+        display_all_maps(map, enemy_map);
         coords = wait_for_attack(coords, map);
         send_result(host_pid, coords, map);
+        if (lose(map)) {
+            send_message(host_pid, int_to_bin(BREAK));
+            break;
+        }
         attack(host_pid, enemy_map);
     }
     send_message(host_pid, int_to_bin(WIN));
