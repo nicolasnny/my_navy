@@ -41,7 +41,7 @@ static int analyse_coord(char *coord)
 {
     int i = 0;
 
-    while (coord != NULL || coord[i]) {
+    while (coord != NULL && coord[i]) {
         if (!(coord[i] >= '1' && coord[i] <= '8') &&
             !(coord[i] >= 'A' && coord[i] <= 'H'))
             return ERROR;
