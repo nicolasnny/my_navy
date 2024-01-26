@@ -57,7 +57,7 @@ char *get_coord(char *line)
     int i = 0;
     char *coord;
 
-    while (line[i] && line[i] != '\n' && line[i] != ':')
+    while (line != NULL && line[i] && line[i] != '\n' && line[i] != ':')
         i++;
     if (i == 0)
         return NULL;
@@ -72,6 +72,8 @@ static int check_line(char *line)
     int db_point_nb = 0;
     int i = 0;
 
+    if (my_strlen(line) != 7 && my_strlen(line) != 8)
+        return ERROR;
     while (line[i] && line[i] != '\n') {
         if (line[i] == ':') {
             check = analyse_coord(get_coord(line + i + 1));
@@ -81,9 +83,7 @@ static int check_line(char *line)
             return ERROR;
         i++;
     }
-    if (db_point_nb != 2)
-        return ERROR;
-    if (my_getnbr(line) != get_size_w_coord
+    if (db_point_nb != 2 || my_getnbr(line) != get_size_w_coord
         (get_coord(line + 2), get_coord(line + 5)))
         return ERROR;
     return 0;
