@@ -33,5 +33,5 @@ int display_flag_h(void)
     my_putstr("pid of the first player.\n");
     my_putstr("\tnavy_positions: file representing the postitions");
     my_putstr("of the ships.\n");
-    return 1;
+    return HELP;
 }

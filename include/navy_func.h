@@ -16,6 +16,7 @@
     #define SUCCESS 0
     #define SHIP_NB 4
     #define MAP_SIZE 8
+    #define HELP 50
 
 //--> main
 int guest_connect(char *pid, char *pos);

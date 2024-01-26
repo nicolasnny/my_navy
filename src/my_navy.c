@@ -93,6 +93,8 @@ int my_navy(int ac, char **av)
     signal(SIGUSR2, add_zero);
     if (check == ERROR)
         return ERROR;
+    if (check == HELP)
+        return 0;
     if (ac == 2)
         return host_connect(av[1]);
     if (ac == 3)
