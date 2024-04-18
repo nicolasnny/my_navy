@@ -33,3 +33,5 @@ To play My Navy, follow these steps:
    ```
 
 If you make an out-of-range attack or attack a place you have already attacked, you will lose the turn. The game ends whenever all of the ships of any of the players have been defeated.
+
+<img src="demo.png" alt="demo_img">
