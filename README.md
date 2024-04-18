@@ -1,28 +1,35 @@
-My_navy
-This project is a recreation of the very famous Battleship game The game consist of a 8X8 board and is initially ran using a file as argument with the coordinates of the boats on the board
+# My Navy
 
+My Navy is a recreation of the classic Battleship game. The game features an 8x8 board and is initialized using a file as an argument containing the coordinates of the boats on the board.
+
+## File Format
 Example of the content of a file:
 
+```
 2:D1:D2
-
 3:A1:A3
-
 4:B3:E3
-
 5:C5:G5
+```
 
-These represents the positions of the ships, with sizes of 2, 3, 4 and 5
+These represent the positions of the ships, with sizes of 2, 3, 4, and 5.
 
-Compilation
-Make
+## Compilation
+```
+make
+```
 
-Usage
-To play, you have to open two terminals. The two will connect with each other by sending the PID of the first one to the second as argument.
+## Usage
+To play My Navy, follow these steps:
 
-First player:
+1. **First Player:**
+   ```
+   ./my_navy [map1]
+   ```
 
-./my_navy [map1]
-Second player:
+2. **Second Player:**
+   ```
+   ./my_navy [PID of the first terminal] [map2]
+   ```
 
-./my_navy [PID of the first terminal] [map2]
-If you do an out-of-range attack or attack at a place you have already attacked, you will lose the turn. The game will end whenever all of the ships of any of the players have been defeated.
+If you make an out-of-range attack or attack a place you have already attacked, you will lose the turn. The game ends whenever all of the ships of any of the players have been defeated.
